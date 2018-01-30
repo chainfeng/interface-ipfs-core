@@ -95,6 +95,26 @@ module.exports = (common) => {
       })
     })
 
+    it('.bw Poll', (done) => {
+      if (!withGo) {
+        console.log('Not supported in js-ipfs yet')
+        return done()
+      }
+
+      ipfs.stats.bw({poll: true}, (err, res) => {
+        expect(err).to.not.exist()
+        expect(res).to.exist()
+
+        res.once('data', (data) => {
+          expect(data).to.have.a.property('totalIn')
+          expect(data).to.have.a.property('totalOut')
+          expect(data).to.have.a.property('rateIn')
+          expect(data).to.have.a.property('rateOut')
+          done()
+        })
+      })
+    })
+
     it('.bw Promise', () => {
       if (!withGo) {
         console.log('Not supported in js-ipfs yet')
@@ -107,6 +127,28 @@ module.exports = (common) => {
         expect(res).to.have.a.property('totalOut')
         expect(res).to.have.a.property('rateIn')
         expect(res).to.have.a.property('rateOut')
+      })
+    })
+
+    it('.bw Promise Poll', (done) => {
+      if (!withGo) {
+        console.log('Not supported in js-ipfs yet')
+        return
+      }
+
+      ipfs.stats.bw({poll: true}).then((res) => {
+        expect(res).to.exist()
+
+        res.once('data', (data) => {
+          expect(data).to.have.a.property('totalIn')
+          expect(data).to.have.a.property('totalOut')
+          expect(data).to.have.a.property('rateIn')
+          expect(data).to.have.a.property('rateOut')
+          done()
+        })
+      }).catch(err => {
+        expect(err).to.not.exist()
+        done()
       })
     })
 

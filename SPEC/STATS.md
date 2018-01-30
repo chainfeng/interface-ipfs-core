@@ -25,7 +25,9 @@ Where:
   - `poll` is used to print bandwidth at an interval.
   - `interval` is the time interval to wait between updating output, if `poll` is true.
 
-`callback` must follow `function (err, stats) {}` signature, where `err` is an error if the operation was not successful. `stats` is an Object containing the following keys:
+If `poll` is `true`, then `callback` must follow `function (err, stream) {}` signature, where `err` is an error if the operation was not successful and `stream` is a Readable Stream where you can listen to the event `data` with a listener that must follow `function (stat) {}` signature.
+
+Otherwise, `callback` must follow `function (err, stat) {}` signature, where `err` is an error and `stat` is an Object containing the following keys:
 
 - `totalIn`
 - `totalOut`
