@@ -6,6 +6,7 @@
 const chai = require('chai')
 const dirtyChai = require('dirty-chai')
 const expect = chai.expect
+const Big = require('big.js')
 chai.use(dirtyChai)
 
 module.exports = (common) => {
@@ -91,7 +92,16 @@ module.exports = (common) => {
         expect(res).to.have.a.property('totalOut')
         expect(res).to.have.a.property('rateIn')
         expect(res).to.have.a.property('rateOut')
-        done()
+
+        try {
+          new Big(res.totalIn)
+          new Big(res.totalOut)
+          new Big(res.rateIn)
+          new Big(res.rateOut)
+          done()
+        } catch (e) {
+          done(e)
+        }
       })
     })
 
@@ -110,23 +120,44 @@ module.exports = (common) => {
           expect(data).to.have.a.property('totalOut')
           expect(data).to.have.a.property('rateIn')
           expect(data).to.have.a.property('rateOut')
-          done()
+
+          try {
+            new Big(data.totalIn)
+            new Big(data.totalOut)
+            new Big(data.rateIn)
+            new Big(data.rateOut)
+            done()
+          } catch (e) {
+            done(e)
+          }
+
+          res.destroy()
         })
       })
     })
 
-    it('.bw Promise', () => {
+    it('.bw Promise', (done) => {
       if (!withGo) {
         console.log('Not supported in js-ipfs yet')
         return
       }
 
-      return ipfs.stats.bw().then((res) => {
+      ipfs.stats.bw().then((res) => {
         expect(res).to.exist()
         expect(res).to.have.a.property('totalIn')
         expect(res).to.have.a.property('totalOut')
         expect(res).to.have.a.property('rateIn')
         expect(res).to.have.a.property('rateOut')
+
+        try {
+          new Big(res.totalIn)
+          new Big(res.totalOut)
+          new Big(res.rateIn)
+          new Big(res.rateOut)
+          done()
+        } catch (e) {
+          done(e)
+        }
       })
     })
 
@@ -144,7 +175,18 @@ module.exports = (common) => {
           expect(data).to.have.a.property('totalOut')
           expect(data).to.have.a.property('rateIn')
           expect(data).to.have.a.property('rateOut')
-          done()
+
+          try {
+            new Big(data.totalIn)
+            new Big(data.totalOut)
+            new Big(data.rateIn)
+            new Big(data.rateOut)
+            done()
+          } catch (e) {
+            done(e)
+          }
+
+          res.destroy()
         })
       }).catch(done)
     })
