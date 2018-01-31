@@ -146,10 +146,7 @@ module.exports = (common) => {
           expect(data).to.have.a.property('rateOut')
           done()
         })
-      }).catch(err => {
-        expect(err).to.not.exist()
-        done()
-      })
+      }).catch(done)
     })
 
     it('.repo', (done) => {
