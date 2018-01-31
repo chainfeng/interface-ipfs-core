@@ -6,7 +6,17 @@
 const chai = require('chai')
 const dirtyChai = require('dirty-chai')
 const expect = chai.expect
+const Big = require('big.js')
 chai.use(dirtyChai)
+
+const isNumber = (n) => {
+  try {
+    new Big(n)
+    return true
+  } catch (e) {
+    return false
+  }
+}
 
 module.exports = (common) => {
   describe('.repo', () => {
@@ -46,26 +56,36 @@ module.exports = (common) => {
     })
 
     it('.stat', (done) => {
-      ipfs.repo.stat((err, stat) => {
+      ipfs.repo.stat((err, res) => {
         expect(err).to.not.exist()
-        expect(stat).to.exist()
-        expect(stat).to.have.property('numObjects')
-        expect(stat).to.have.property('repoSize')
-        expect(stat).to.have.property('repoPath')
-        expect(stat).to.have.property('version')
-        expect(stat).to.have.property('storageMax')
+        expect(res).to.exist()
+        expect(res).to.have.a.property('numObjects')
+        expect(res).to.have.a.property('repoSize')
+        expect(res).to.have.a.property('repoPath')
+        expect(res).to.have.a.property('version')
+        expect(res).to.have.a.property('storageMax')
+        expect(isNumber(res.numObjects)).to.eql(true)
+        expect(isNumber(res.repoSize)).to.eql(true)
+        expect(isNumber(res.storageMax)).to.eql(true)
+        expect(res.repoPath).to.be.a('string')
+        expect(res.version).to.be.a('string')
         done()
       })
     })
 
     it('.stat Promise', () => {
-      return ipfs.repo.stat().then((stat) => {
-        expect(stat).to.exist()
-        expect(stat).to.have.property('numObjects')
-        expect(stat).to.have.property('repoSize')
-        expect(stat).to.have.property('repoPath')
-        expect(stat).to.have.property('version')
-        expect(stat).to.have.property('storageMax')
+      return ipfs.repo.stat().then((res) => {
+        expect(res).to.exist()
+        expect(res).to.have.a.property('numObjects')
+        expect(res).to.have.a.property('repoSize')
+        expect(res).to.have.a.property('repoPath')
+        expect(res).to.have.a.property('version')
+        expect(res).to.have.a.property('storageMax')
+        expect(isNumber(res.numObjects)).to.eql(true)
+        expect(isNumber(res.repoSize)).to.eql(true)
+        expect(isNumber(res.storageMax)).to.eql(true)
+        expect(res.repoPath).to.be.a('string')
+        expect(res.version).to.be.a('string')
       })
     })
 

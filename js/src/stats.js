@@ -9,6 +9,15 @@ const expect = chai.expect
 const Big = require('big.js')
 chai.use(dirtyChai)
 
+const isNumber = (n) => {
+  try {
+    new Big(n)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
 module.exports = (common) => {
   describe('.stats', () => {
     let ipfs
@@ -55,6 +64,16 @@ module.exports = (common) => {
         expect(res).to.have.a.property('dataSent')
         expect(res).to.have.a.property('dupBlksReceived')
         expect(res).to.have.a.property('dupDataReceived')
+
+        expect(isNumber(res.provideBufLen)).to.eql(true)
+        expect(res.wantlist).to.be.an('array')
+        expect(res.peers).to.be.an('array')
+        expect(isNumber(res.blocksReceived)).to.eql(true)
+        expect(isNumber(res.dataReceived)).to.eql(true)
+        expect(isNumber(res.blocksSent)).to.eql(true)
+        expect(isNumber(res.dataSent)).to.eql(true)
+        expect(isNumber(res.dupBlksReceived)).to.eql(true)
+        expect(isNumber(res.dupDataReceived)).to.eql(true)
         done()
       })
     })
@@ -76,6 +95,16 @@ module.exports = (common) => {
         expect(res).to.have.a.property('dataSent')
         expect(res).to.have.a.property('dupBlksReceived')
         expect(res).to.have.a.property('dupDataReceived')
+
+        expect(isNumber(res.provideBufLen)).to.eql(true)
+        expect(res.wantlist).to.be.an('array')
+        expect(res.peers).to.be.an('array')
+        expect(isNumber(res.blocksReceived)).to.eql(true)
+        expect(isNumber(res.dataReceived)).to.eql(true)
+        expect(isNumber(res.blocksSent)).to.eql(true)
+        expect(isNumber(res.dataSent)).to.eql(true)
+        expect(isNumber(res.dupBlksReceived)).to.eql(true)
+        expect(isNumber(res.dupDataReceived)).to.eql(true)
       })
     })
 
@@ -92,16 +121,11 @@ module.exports = (common) => {
         expect(res).to.have.a.property('totalOut')
         expect(res).to.have.a.property('rateIn')
         expect(res).to.have.a.property('rateOut')
-
-        try {
-          new Big(res.totalIn)
-          new Big(res.totalOut)
-          new Big(res.rateIn)
-          new Big(res.rateOut)
-          done()
-        } catch (e) {
-          done(e)
-        }
+        expect(isNumber(res.totalIn)).to.eql(true)
+        expect(isNumber(res.totalOut)).to.eql(true)
+        expect(isNumber(res.rateIn)).to.eql(true)
+        expect(isNumber(res.rateOut)).to.eql(true)
+        done()
       })
     })
 
@@ -120,44 +144,32 @@ module.exports = (common) => {
           expect(data).to.have.a.property('totalOut')
           expect(data).to.have.a.property('rateIn')
           expect(data).to.have.a.property('rateOut')
-
-          try {
-            new Big(data.totalIn)
-            new Big(data.totalOut)
-            new Big(data.rateIn)
-            new Big(data.rateOut)
-            done()
-          } catch (e) {
-            done(e)
-          }
-
+          expect(isNumber(data.totalIn)).to.eql(true)
+          expect(isNumber(data.totalOut)).to.eql(true)
+          expect(isNumber(data.rateIn)).to.eql(true)
+          expect(isNumber(data.rateOut)).to.eql(true)
+          done()
           res.destroy()
         })
       })
     })
 
-    it('.bw Promise', (done) => {
+    it('.bw Promise', () => {
       if (!withGo) {
         console.log('Not supported in js-ipfs yet')
         return
       }
 
-      ipfs.stats.bw().then((res) => {
+      return ipfs.stats.bw().then((res) => {
         expect(res).to.exist()
         expect(res).to.have.a.property('totalIn')
         expect(res).to.have.a.property('totalOut')
         expect(res).to.have.a.property('rateIn')
         expect(res).to.have.a.property('rateOut')
-
-        try {
-          new Big(res.totalIn)
-          new Big(res.totalOut)
-          new Big(res.rateIn)
-          new Big(res.rateOut)
-          done()
-        } catch (e) {
-          done(e)
-        }
+        expect(isNumber(res.totalIn)).to.eql(true)
+        expect(isNumber(res.totalOut)).to.eql(true)
+        expect(isNumber(res.rateIn)).to.eql(true)
+        expect(isNumber(res.rateOut)).to.eql(true)
       })
     })
 
@@ -175,17 +187,11 @@ module.exports = (common) => {
           expect(data).to.have.a.property('totalOut')
           expect(data).to.have.a.property('rateIn')
           expect(data).to.have.a.property('rateOut')
-
-          try {
-            new Big(data.totalIn)
-            new Big(data.totalOut)
-            new Big(data.rateIn)
-            new Big(data.rateOut)
-            done()
-          } catch (e) {
-            done(e)
-          }
-
+          expect(isNumber(data.totalIn)).to.eql(true)
+          expect(isNumber(data.totalOut)).to.eql(true)
+          expect(isNumber(data.rateIn)).to.eql(true)
+          expect(isNumber(data.rateOut)).to.eql(true)
+          done()
           res.destroy()
         })
       }).catch(done)
@@ -205,6 +211,11 @@ module.exports = (common) => {
         expect(res).to.have.a.property('repoPath')
         expect(res).to.have.a.property('version')
         expect(res).to.have.a.property('storageMax')
+        expect(isNumber(res.numObjects)).to.eql(true)
+        expect(isNumber(res.repoSize)).to.eql(true)
+        expect(isNumber(res.storageMax)).to.eql(true)
+        expect(res.repoPath).to.be.a('string')
+        expect(res.version).to.be.a('string')
         done()
       })
     })
@@ -222,6 +233,11 @@ module.exports = (common) => {
         expect(res).to.have.a.property('repoPath')
         expect(res).to.have.a.property('version')
         expect(res).to.have.a.property('storageMax')
+        expect(isNumber(res.numObjects)).to.eql(true)
+        expect(isNumber(res.repoSize)).to.eql(true)
+        expect(isNumber(res.storageMax)).to.eql(true)
+        expect(res.repoPath).to.be.a('string')
+        expect(res.version).to.be.a('string')
       })
     })
   })
