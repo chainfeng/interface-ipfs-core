@@ -31,10 +31,10 @@ Otherwise, `callback` must follow `function (err, stat) {}` signature, where `er
 
 `stat` is, in both cases, an Object containing the following keys:
 
-- `totalIn` - is a string containing a uint64 in bytes.
-- `totalOut` - is a string containing a uint64 in bytes.
-- `rateIn` - is a string containing a uint64 in bytes.
-- `rateOut` - is a string containing a uint64 in bytes.
+- `totalIn` - is a [Big Int][1], in bytes.
+- `totalOut` - is a [Big Int][1], in bytes.
+- `rateIn` - is a [Big Int][1], in bytes.
+- `rateOut` - is a [Big Int][1], in bytes.
 
 If no `callback` is passed, a promise is returned.
 
@@ -43,8 +43,10 @@ If no `callback` is passed, a promise is returned.
 ```JavaScript
 ipfs.stats.bw((err, stats) => console.log(stats))
 
-// { totalIn: 15456,
-//   totalOut: 15420,
-//   rateIn: 905.0873512246716,
-//   rateOut: 893.7400053359125 }
+// { totalIn: Big {...},
+//   totalOut: Big {...},
+//   rateIn: Big {...},
+//   rateOut: Big {...} }
 ```
+
+[1]: https://github.com/MikeMcl/big.js/
