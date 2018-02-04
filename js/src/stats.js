@@ -9,13 +9,65 @@ const expect = chai.expect
 const Big = require('big.js')
 chai.use(dirtyChai)
 
-const isNumber = (n) => {
+const isBigInt = (n) => {
   try {
     new Big(n)
     return true
   } catch (e) {
     return false
   }
+}
+
+const expectIsBitswap = (err, stats) => {
+  expect(err).to.not.exist()
+  expect(stats).to.exist()
+  expect(stats).to.have.a.property('provideBufLen')
+  expect(stats).to.have.a.property('wantlist')
+  expect(stats).to.have.a.property('peers')
+  expect(stats).to.have.a.property('blocksReceived')
+  expect(stats).to.have.a.property('dataReceived')
+  expect(stats).to.have.a.property('blocksSent')
+  expect(stats).to.have.a.property('dataSent')
+  expect(stats).to.have.a.property('dupBlksReceived')
+  expect(stats).to.have.a.property('dupDataReceived')
+
+  expect(isBigInt(stats.provideBufLen)).to.eql(true)
+  expect(stats.wantlist).to.be.an('array')
+  expect(stats.peers).to.be.an('array')
+  expect(isBigInt(stats.blocksReceived)).to.eql(true)
+  expect(isBigInt(stats.dataReceived)).to.eql(true)
+  expect(isBigInt(stats.blocksSent)).to.eql(true)
+  expect(isBigInt(stats.dataSent)).to.eql(true)
+  expect(isBigInt(stats.dupBlksReceived)).to.eql(true)
+  expect(isBigInt(stats.dupDataReceived)).to.eql(true)
+}
+
+const expectIsBandwidth = (err, stats) => {
+  expect(err).to.not.exist()
+  expect(stats).to.exist()
+  expect(stats).to.have.a.property('totalIn')
+  expect(stats).to.have.a.property('totalOut')
+  expect(stats).to.have.a.property('rateIn')
+  expect(stats).to.have.a.property('rateOut')
+  expect(isBigInt(stats.totalIn)).to.eql(true)
+  expect(isBigInt(stats.totalOut)).to.eql(true)
+  expect(isBigInt(stats.rateIn)).to.eql(true)
+  expect(isBigInt(stats.rateOut)).to.eql(true)
+}
+
+const expectIsRepo = (err, res) => {
+  expect(err).to.not.exist()
+  expect(res).to.exist()
+  expect(res).to.have.a.property('numObjects')
+  expect(res).to.have.a.property('repoSize')
+  expect(res).to.have.a.property('repoPath')
+  expect(res).to.have.a.property('version')
+  expect(res).to.have.a.property('storageMax')
+  expect(isBigInt(res.numObjects)).to.eql(true)
+  expect(isBigInt(res.repoSize)).to.eql(true)
+  expect(isBigInt(res.storageMax)).to.eql(true)
+  expect(res.repoPath).to.be.a('string')
+  expect(res.version).to.be.a('string')
 }
 
 module.exports = (common) => {
@@ -53,27 +105,7 @@ module.exports = (common) => {
       }
 
       ipfs.stats.bitswap((err, res) => {
-        expect(err).to.not.exist()
-        expect(res).to.exist()
-        expect(res).to.have.a.property('provideBufLen')
-        expect(res).to.have.a.property('wantlist')
-        expect(res).to.have.a.property('peers')
-        expect(res).to.have.a.property('blocksReceived')
-        expect(res).to.have.a.property('dataReceived')
-        expect(res).to.have.a.property('blocksSent')
-        expect(res).to.have.a.property('dataSent')
-        expect(res).to.have.a.property('dupBlksReceived')
-        expect(res).to.have.a.property('dupDataReceived')
-
-        expect(isNumber(res.provideBufLen)).to.eql(true)
-        expect(res.wantlist).to.be.an('array')
-        expect(res.peers).to.be.an('array')
-        expect(isNumber(res.blocksReceived)).to.eql(true)
-        expect(isNumber(res.dataReceived)).to.eql(true)
-        expect(isNumber(res.blocksSent)).to.eql(true)
-        expect(isNumber(res.dataSent)).to.eql(true)
-        expect(isNumber(res.dupBlksReceived)).to.eql(true)
-        expect(isNumber(res.dupDataReceived)).to.eql(true)
+        expectIsBitswap(err, res)
         done()
       })
     })
@@ -85,26 +117,7 @@ module.exports = (common) => {
       }
 
       return ipfs.stats.bitswap().then((res) => {
-        expect(res).to.exist()
-        expect(res).to.have.a.property('provideBufLen')
-        expect(res).to.have.a.property('wantlist')
-        expect(res).to.have.a.property('peers')
-        expect(res).to.have.a.property('blocksReceived')
-        expect(res).to.have.a.property('dataReceived')
-        expect(res).to.have.a.property('blocksSent')
-        expect(res).to.have.a.property('dataSent')
-        expect(res).to.have.a.property('dupBlksReceived')
-        expect(res).to.have.a.property('dupDataReceived')
-
-        expect(isNumber(res.provideBufLen)).to.eql(true)
-        expect(res.wantlist).to.be.an('array')
-        expect(res.peers).to.be.an('array')
-        expect(isNumber(res.blocksReceived)).to.eql(true)
-        expect(isNumber(res.dataReceived)).to.eql(true)
-        expect(isNumber(res.blocksSent)).to.eql(true)
-        expect(isNumber(res.dataSent)).to.eql(true)
-        expect(isNumber(res.dupBlksReceived)).to.eql(true)
-        expect(isNumber(res.dupDataReceived)).to.eql(true)
+        expectIsBitswap(null, res)
       })
     })
 
@@ -115,16 +128,7 @@ module.exports = (common) => {
       }
 
       ipfs.stats.bw((err, res) => {
-        expect(err).to.not.exist()
-        expect(res).to.exist()
-        expect(res).to.have.a.property('totalIn')
-        expect(res).to.have.a.property('totalOut')
-        expect(res).to.have.a.property('rateIn')
-        expect(res).to.have.a.property('rateOut')
-        expect(isNumber(res.totalIn)).to.eql(true)
-        expect(isNumber(res.totalOut)).to.eql(true)
-        expect(isNumber(res.rateIn)).to.eql(true)
-        expect(isNumber(res.rateOut)).to.eql(true)
+        expectIsBandwidth(err, res)
         done()
       })
     })
@@ -140,14 +144,7 @@ module.exports = (common) => {
         expect(res).to.exist()
 
         res.once('data', (data) => {
-          expect(data).to.have.a.property('totalIn')
-          expect(data).to.have.a.property('totalOut')
-          expect(data).to.have.a.property('rateIn')
-          expect(data).to.have.a.property('rateOut')
-          expect(isNumber(data.totalIn)).to.eql(true)
-          expect(isNumber(data.totalOut)).to.eql(true)
-          expect(isNumber(data.rateIn)).to.eql(true)
-          expect(isNumber(data.rateOut)).to.eql(true)
+          expectIsBandwidth(null, data)
           done()
           res.destroy()
         })
@@ -161,15 +158,7 @@ module.exports = (common) => {
       }
 
       return ipfs.stats.bw().then((res) => {
-        expect(res).to.exist()
-        expect(res).to.have.a.property('totalIn')
-        expect(res).to.have.a.property('totalOut')
-        expect(res).to.have.a.property('rateIn')
-        expect(res).to.have.a.property('rateOut')
-        expect(isNumber(res.totalIn)).to.eql(true)
-        expect(isNumber(res.totalOut)).to.eql(true)
-        expect(isNumber(res.rateIn)).to.eql(true)
-        expect(isNumber(res.rateOut)).to.eql(true)
+        expectIsBandwidth(null, res)
       })
     })
 
@@ -183,14 +172,7 @@ module.exports = (common) => {
         expect(res).to.exist()
 
         res.once('data', (data) => {
-          expect(data).to.have.a.property('totalIn')
-          expect(data).to.have.a.property('totalOut')
-          expect(data).to.have.a.property('rateIn')
-          expect(data).to.have.a.property('rateOut')
-          expect(isNumber(data.totalIn)).to.eql(true)
-          expect(isNumber(data.totalOut)).to.eql(true)
-          expect(isNumber(data.rateIn)).to.eql(true)
-          expect(isNumber(data.rateOut)).to.eql(true)
+          expectIsBandwidth(null, data)
           done()
           res.destroy()
         })
@@ -204,18 +186,7 @@ module.exports = (common) => {
       }
 
       ipfs.stats.repo((err, res) => {
-        expect(err).to.not.exist()
-        expect(res).to.exist()
-        expect(res).to.have.a.property('numObjects')
-        expect(res).to.have.a.property('repoSize')
-        expect(res).to.have.a.property('repoPath')
-        expect(res).to.have.a.property('version')
-        expect(res).to.have.a.property('storageMax')
-        expect(isNumber(res.numObjects)).to.eql(true)
-        expect(isNumber(res.repoSize)).to.eql(true)
-        expect(isNumber(res.storageMax)).to.eql(true)
-        expect(res.repoPath).to.be.a('string')
-        expect(res.version).to.be.a('string')
+        expectIsRepo(err, res)
         done()
       })
     })
@@ -227,17 +198,7 @@ module.exports = (common) => {
       }
 
       return ipfs.stats.repo().then((res) => {
-        expect(res).to.exist()
-        expect(res).to.have.a.property('numObjects')
-        expect(res).to.have.a.property('repoSize')
-        expect(res).to.have.a.property('repoPath')
-        expect(res).to.have.a.property('version')
-        expect(res).to.have.a.property('storageMax')
-        expect(isNumber(res.numObjects)).to.eql(true)
-        expect(isNumber(res.repoSize)).to.eql(true)
-        expect(isNumber(res.storageMax)).to.eql(true)
-        expect(res.repoPath).to.be.a('string')
-        expect(res.version).to.be.a('string')
+        expectIsRepo(null, res)
       })
     })
   })
