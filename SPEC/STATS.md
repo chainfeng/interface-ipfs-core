@@ -39,7 +39,7 @@ If no `callback` is passed, a promise is returned.
 **Example:**
 
 ```JavaScript
-ipfs.stats.bwPoll((err, stats) => console.log(stats))
+ipfs.stats.bw((err, stats) => console.log(stats))
 
 // { totalIn: Big {...},
 //   totalOut: Big {...},
